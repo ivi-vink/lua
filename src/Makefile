@@ -7,7 +7,7 @@
 PLAT= guess
 
 CC= gcc -std=gnu99
-CFLAGS= -O2 -Wall -Wextra -DLUA_COMPAT_5_3 $(SYSCFLAGS) $(MYCFLAGS)
+CFLAGS= -O2 -Wall -Wextra -DLUA_COMPAT_5_3 $(SYSCFLAGS) $(MYCFLAGS) -fPIC
 LDFLAGS= $(SYSLDFLAGS) $(MYLDFLAGS)
 LIBS= -lm $(SYSLIBS) $(MYLIBS)
 
@@ -33,6 +33,7 @@ CMCFLAGS=
 PLATS= guess aix bsd c89 freebsd generic ios linux linux-readline macosx mingw posix solaris
 
 LUA_A=	liblua.a
+LUA_SO= liblua.so
 CORE_O=	lapi.o lcode.o lctype.o ldebug.o ldo.o ldump.o lfunc.o lgc.o llex.o lmem.o lobject.o lopcodes.o lparser.o lstate.o lstring.o ltable.o ltm.o lundump.o lvm.o lzio.o
 LIB_O=	lauxlib.o lbaselib.o lcorolib.o ldblib.o liolib.o lmathlib.o loadlib.o loslib.o lstrlib.o ltablib.o lutf8lib.o linit.o
 BASE_O= $(CORE_O) $(LIB_O) $(MYOBJS)
@@ -44,7 +45,7 @@ LUAC_T=	luac
 LUAC_O=	luac.o
 
 ALL_O= $(BASE_O) $(LUA_O) $(LUAC_O)
-ALL_T= $(LUA_A) $(LUA_T) $(LUAC_T)
+ALL_T= $(LUA_A) $(LUA_T) $(LUAC_T) $(LUA_SO)
 ALL_A= $(LUA_A)
 
 # Targets start here.
@@ -223,3 +224,6 @@ lzio.o: lzio.c lprefix.h lua.h luaconf.h llimits.h lmem.h lstate.h \
  lobject.h ltm.h lzio.h
 
 # (end of Makefile)
+
+$(LUA_SO): $(BASE_O)
+      $(CC) -shared -o $@ $? $(LIBS) $(MYLDFLAGS)
