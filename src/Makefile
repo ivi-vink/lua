@@ -26,7 +26,7 @@ MYLIBS=
 MYOBJS=
 
 # Special flags for compiler modules; -Os reduces code size.
-CMCFLAGS= 
+CMCFLAGS=
 
 # == END OF USER SETTINGS -- NO NEED TO CHANGE ANYTHING BELOW THIS LINE =======
 
@@ -157,6 +157,9 @@ lparser.o:
 lcode.o:
 	$(CC) $(CFLAGS) $(CMCFLAGS) -c lcode.c
 
+$(LUA_SO): $(BASE_O)
+	$(CC) -shared -o $@ $? $(LIBS) $(MYLDFLAGS)
+
 # DO NOT DELETE
 
 lapi.o: lapi.c lprefix.h lua.h luaconf.h lapi.h llimits.h lstate.h \
@@ -224,6 +227,3 @@ lzio.o: lzio.c lprefix.h lua.h luaconf.h llimits.h lmem.h lstate.h \
  lobject.h ltm.h lzio.h
 
 # (end of Makefile)
-
-$(LUA_SO): $(BASE_O)
-      $(CC) -shared -o $@ $? $(LIBS) $(MYLDFLAGS)
